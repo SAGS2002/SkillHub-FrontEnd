@@ -23,25 +23,15 @@ export default function LandingPage() {
                     <div className="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-500">
                         <Link
                             to="/login?role=client"
-                            className="hover:text-violet-600 transition-colors"
+                            className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-5 py-2 rounded-full font-bold text-sm transition-colors"
                         >
                             Busco empleado
                         </Link>
                         <Link
                             to="/login?role=talent"
-                            className="hover:text-violet-600 transition-colors"
-                        >
-                            Busco empleo
-                        </Link>
-                    </div>
-
-                    {/* Botón de acción */}
-                    <div className="flex items-center">
-                        <Link
-                            to="/login"
                             className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-5 py-2 rounded-full font-bold text-sm transition-colors"
                         >
-                            Iniciar sesión
+                            Busco empleo
                         </Link>
                     </div>
 
