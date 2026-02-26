@@ -1,18 +1,25 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import Login from './components/Login'; // Asegúrate de que la ruta coincida con donde tienes tu Login
+import BuscadorTalento from './pages/BuscadorTalento';
+import BuscadorTrabajos from './pages/BuscadorTrabajos';
+import DashboardTalento from './pages/DashboardTalento';
+import DashboardCliente from './pages/DashboardCliente';
+import Login from './components/Login';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Ruta principal: La Landing Page */}
         <Route path="/" element={<LandingPage />} />
-
-        {/* Ruta para iniciar sesión o registrarse */}
         <Route path="/login" element={<Login />} />
 
-        {/* Aquí agregaremos más rutas luego (ej. /dashboard, /talentos) */}
+        {/* Rutas de Dashboard */}
+        <Route path="/dashboard-estudiante" element={<DashboardTalento />} />
+        <Route path="/dashboard-empresa" element={<DashboardCliente />} />
+
+        {/* Rutas de Exploración */}
+        <Route path="/talentos" element={<BuscadorTalento />} />
+        <Route path="/trabajos" element={<BuscadorTrabajos />} />
       </Routes>
     </BrowserRouter>
   );
