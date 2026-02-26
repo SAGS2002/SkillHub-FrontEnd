@@ -82,14 +82,6 @@ export default function Navbar({ usuario }) {
                                     Mi Perfil Profesional
                                 </Link>
 
-                                <Link
-                                    to={usuario === 'talent' ? "/mis-postulaciones" : "/mis-vacantes"}
-                                    className="block px-4 py-2.5 text-sm text-slate-700 font-medium hover:bg-violet-50 hover:text-violet-700 transition-colors"
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    {usuario === 'talent' ? "Mis Postulaciones" : "Gestionar Vacantes"}
-                                </Link>
-
                                 <div className="border-t border-slate-50 mt-2">
                                     <button
                                         onClick={cerrarSesion}

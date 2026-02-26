@@ -1,10 +1,10 @@
-import Navbar from '../components/Navbar';
+
 import { misPostulaciones } from '../data/mockData';
 
 export default function DashboardTalento() {
     return (
         <div className="min-h-screen bg-slate-50">
-            <Navbar usuario="talent" />
+        
             <main className="max-w-7xl mx-auto p-6">
                 <h1 className="text-2xl font-bold text-slate-800 mb-8">¡Hola, Sebastian! 👋</h1>
 

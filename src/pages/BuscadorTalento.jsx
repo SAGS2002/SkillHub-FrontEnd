@@ -1,38 +1,90 @@
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import { talentos, universidades } from '../data/mockData';
 
 export default function BuscadorTalento() {
-    return (
-        <div className="min-h-screen bg-slate-50">
-            <Navbar usuario="client" />
-            <div className="max-w-7xl mx-auto p-6">
-                {/* Filtros */}
-                <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap gap-4 mb-8">
-                    <input type="text" placeholder="Buscar por rol o skill..." className="flex-grow p-3 bg-slate-50 rounded-xl border-none text-sm focus:ring-2 focus:ring-violet-500" />
-                    <select className="p-3 bg-slate-50 rounded-xl border-none text-sm font-bold text-slate-600">
-                        <option>Todas las Universidades</option>
-                        {universidades.map(u => <option key={u}>{u}</option>)}
-                    </select>
-                </div>
+    const [talentos, setTalentos] = useState([]);
+    const API_URL = import.meta.env.VITE_API_URL; // Usando tu variable de entorno
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    useEffect(() => {
+        const fetchTalent = async () => {
+            try {
+                const response = await fetch(`${API_URL}/api/talents`); //
+                const data = await response.json();
+                // Aseguramos que la respuesta sea un arreglo antes de guardarlo
+                setTalentos(Array.isArray(data) ? data : []);
+            } catch (err) { 
+                console.error("Error cargando talentos:", err); 
+            }
+        };
+        fetchTalent();
+    }, [API_URL]);
+
+    return (
+        <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
+            
+            <div className="max-w-7xl mx-auto p-6 w-full">
+                <header className="mb-10">
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Catálogo de Talento</h1>
+                    <p className="text-slate-500 font-medium">Encuentra a los mejores estudiantes de sistemas para tus proyectos.</p>
+                </header>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {talentos.map(t => (
-                        <div key={t.id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-violet-200 transition-all group">
-                            <div className="flex items-center gap-4 mb-4">
-                                <img src={t.avatar} className="w-14 h-14 rounded-full border-2 border-white ring-2 ring-violet-50" />
+                        <div key={t.user_id} className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:border-violet-200 transition-all group flex flex-col h-full">
+                            {/* CABECERA DE LA TARJETA: NOMBRE Y ROL */}
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-16 h-16 rounded-full bg-violet-100 flex items-center justify-center font-black text-violet-700 border-2 border-white ring-4 ring-violet-50 text-2xl uppercase">
+                                    {t.full_name?.substring(0, 1) || 'S'}
+                                </div>
                                 <div>
-                                    <h3 className="font-bold text-slate-900 leading-none">{t.nombre}</h3>
-                                    <p className="text-violet-600 text-xs font-bold mt-1 uppercase tracking-tighter">{t.rol}</p>
+                                    <h3 className="font-black text-slate-900 text-lg leading-none">{t.full_name || 'Estudiante'}</h3>
+                                    <p className="text-violet-600 text-[10px] font-black mt-1 uppercase tracking-widest">{t.role_title || 'Talento SkillHub'}</p>
                                 </div>
                             </div>
-                            <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">{t.universidad} • {t.semestre}</p>
-                            <p className="text-sm text-slate-600 line-clamp-2 mb-4">{t.descripcion}</p>
-                            <div className="flex flex-wrap gap-1 mb-6">
-                                {t.skills.map(s => <span key={s} className="bg-slate-100 text-slate-500 text-[10px] px-2 py-1 rounded font-bold uppercase">{s}</span>)}
+
+                            {/* INFORMACIÓN ACADÉMICA (Universidad y Semestre si estudia) */}
+                            <div className="mb-4">
+                                <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                    <span className="text-slate-900">📍 {t.university || 'IUTEPI'}</span>
+                                    {t.is_studying && t.semester && (
+                                        <>
+                                            <span className="text-slate-300">•</span>
+                                            <span className="text-violet-500">{t.semester}</span>
+                                        </>
+                                    )}
+                                </p>
                             </div>
-                            <button className="w-full bg-slate-900 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-violet-600 transition-all">Ver Perfil Técnico</button>
+
+                            {/* DESCRIPCIÓN / BIO */}
+                            <p className="text-sm text-slate-500 line-clamp-3 mb-6 font-medium leading-relaxed italic">
+                                "{t.bio || 'Sin descripción profesional disponible en el perfil.'}"
+                            </p>
+
+                            {/* SKILLS DINÁMICAS (Desde el JSONB de PostgreSQL) */}
+                            <div className="flex flex-wrap gap-2 mb-8 mt-auto">
+                                {t.skills && Array.isArray(t.skills) && t.skills.length > 0 ? (
+                                    t.skills.map((skill, index) => (
+                                        <span key={index} className="bg-slate-50 text-slate-500 text-[9px] font-black px-3 py-1.5 rounded-lg uppercase border border-slate-100 italic">
+                                            {skill.name}
+                                        </span>
+                                    ))
+                                ) : (
+                                    <span className="text-slate-300 text-[10px] font-bold uppercase italic">Sin skills registradas</span>
+                                )}
+                            </div>
+
+                            <button className="w-full bg-slate-900 text-white py-4 rounded-2xl text-xs font-black uppercase hover:bg-violet-600 transition-all tracking-widest shadow-lg shadow-slate-100 active:scale-95">
+                                Ver Perfil Técnico
+                            </button>
                         </div>
                     ))}
+                    
+                    {/* ESTADO VACÍO */}
+                    {talentos.length === 0 && (
+                        <div className="text-center col-span-full py-20">
+                            <p className="text-slate-300 font-black italic text-xl uppercase tracking-widest">Buscando talento en la red...</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
